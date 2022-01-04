@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>{{.PageTitle}}</title>
     <link rel="stylesheet" href="http://d2fq26gzgmfal8.cloudfront.net/bootstrap.min.css" media="screen">
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/r/bs/dt-1.10.9/datatables.min.css" />
 </head>
+
 <body>
     <div class="container">
         <div class="row">
@@ -13,9 +15,17 @@
         </div>
         <div class="row">
             <br>
-            <input type="text" id="link" name="link"></input>
-            <input type="text" id="tags" name="tags"></input>
-            <input type="submit">
+            <form action="/add" method="post">
+                <input type="text" name="link"></input>
+                <input type="text" name="tags"></input>
+                <input type="submit" value="add">
+            </form>
+            <br>
+            <br>
+            <form action="/search" method="post">
+                <input type="text" name="search"></input>
+                <input type="submit" value="Search">
+            </form>
             <br>
         </div>
 
@@ -40,14 +50,14 @@
             </table>
         </div>
     </div>
-	<script src="http://d2fq26gzgmfal8.cloudfront.net/jquery-1.10.2.min.js"></script>
+    <script src="http://d2fq26gzgmfal8.cloudfront.net/jquery-1.10.2.min.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/r/bs/dt-1.10.9/datatables.min.js"></script>
     <script src="http://d2fq26gzgmfal8.cloudfront.net/bootstrap.min.js"></script>
     <script>
-        $(document).ready(function()
-        {
+        $(document).ready(function() {
             $('#queries').DataTable();
         });
     </script>
 </body>
+
 </html>
