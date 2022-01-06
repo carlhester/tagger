@@ -4,18 +4,23 @@ import (
 	"database/sql"
 	"fmt"
 	"html/template"
+	"log"
 	"net/http"
+	"net/url"
+	"os"
 	"strings"
 
 	_ "github.com/mattn/go-sqlite3"
 )
 
 type App struct {
-	db *myDB
+	db  *myDB
+	log *log.Logger
 }
 
 type myDB struct {
-	db *sql.DB
+	db  *sql.DB
+	log *log.Logger
 }
 
 type row struct {
@@ -27,7 +32,7 @@ type row struct {
 func (d *myDB) searchTags(query string) []Entry {
 	allRows := []row{}
 	q := fmt.Sprintf("SELECT * FROM tags where tags like '%%%s%%'", query)
-	fmt.Printf("%+v", q)
+	d.log.Printf("Query: %+v", q)
 	rows, err := d.db.Query(q)
 	if err != nil {
 		panic(err)
@@ -55,7 +60,7 @@ func (d *myDB) searchTags(query string) []Entry {
 func (d *myDB) add(link, tags string) []Entry {
 	allRows := []row{}
 	q := fmt.Sprintf("insert into tags (link, tags) values ('%s', '%s')", link, tags)
-	fmt.Printf("%+v", q)
+	d.log.Printf("Insert: %+v", q)
 	rows, err := d.db.Query(q)
 	if err != nil {
 		panic(err)
@@ -122,13 +127,18 @@ func (app *App) handler(w http.ResponseWriter, req *http.Request) {
 	entries := func(req *http.Request) []Entry {
 		switch req.URL.Path {
 		case "/search":
-			req.ParseForm()
-			fmt.Printf("\n%+v\n", req.Form)
-			t := req.Form["search"]
-			return app.db.searchTags(t[0])
+			if req.Method == http.MethodPost {
+				req.ParseForm()
+				app.log.Printf("ParseForm: %+v\n", req.Form)
+				t := req.Form["search"]
+				return app.db.searchTags(t[0])
+			} else {
+				q, _ := url.ParseQuery(req.URL.RawQuery)
+				return app.db.searchTags(fmt.Sprintf(q["tag"][0]))
+			}
 		case "/add":
 			req.ParseForm()
-			fmt.Printf("\n%+v\n", req.Form)
+			app.log.Printf("\n%+v\n", req.Form)
 			l := req.Form["link"]
 			t := req.Form["tags"]
 			return app.db.add(l[0], t[0])
@@ -156,8 +166,11 @@ func main() {
 		panic(err)
 	}
 
+	logger := log.New(os.Stdout, "", log.Ltime)
+
 	app := &App{
-		db: &myDB{db: db},
+		db:  &myDB{db: db, log: logger},
+		log: logger,
 	}
 
 	http.HandleFunc("/", app.handler)
