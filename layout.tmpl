@@ -12,22 +12,27 @@
     <div class="container">
         <div class="row">
             <h1>{{.PageTitle}}</h1>
+            <p>Keep tabs on links by tagging them.</p>
         </div>
         <div class="row">
-            <br>
-            <form action="/add" method="post">
-                <input type="text" name="link"></input>
-                <input type="text" name="tags"></input>
-                <input type="submit" value="add">
-            </form>
-            <br>
-            <br>
-            <form action="/search" method="post">
-                <input type="text" name="search"></input>
-                <input type="submit" value="Search">
-            </form>
-            <br>
+            <div class="card p-2">
+                <form class="col-md-6 mb-3" action=" /add" method="post">
+                    <label for="link">Link</label>
+                    <input type=" text" name="link" id="link"></input>
+                    <label for="tag">Tag</label>
+                    <input type="text" name="tags"></input>
+                    <button class="btn btn-primary" type="submit">Add</button>
+                </form>
+            </div>
         </div>
+        <!-- <div class="row">
+            <div class="form-group">
+                <form action="/search" method="post">
+                    <input type="text" name="search"></input>
+                    <input type="submit" value="Search">
+                </form>
+            </div>
+        </div> -->
 
         <div class="row">
             <br>

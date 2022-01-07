@@ -59,11 +59,15 @@ func (d *myDB) searchTags(query string) []Entry {
 
 func (d *myDB) add(link, tags string) []Entry {
 	allRows := []row{}
-	q := fmt.Sprintf("insert into tags (link, tags) values ('%s', '%s')", link, tags)
-	d.log.Printf("Insert: %+v", q)
-	rows, err := d.db.Query(q)
-	if err != nil {
-		d.log.Fatal(err)
+	rows := &sql.Rows{}
+	if link != "" && tags != "" {
+		q := fmt.Sprintf("insert into tags (link, tags) values ('%s', '%s')", link, tags)
+		d.log.Printf("Insert: %+v", q)
+		var err error
+		rows, err = d.db.Query(q)
+		if err != nil {
+			d.log.Fatal(err)
+		}
 	}
 
 	for rows.Next() {
