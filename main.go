@@ -35,7 +35,7 @@ func (d *myDB) searchTags(query string) []Entry {
 	d.log.Printf("Query: %+v", q)
 	rows, err := d.db.Query(q)
 	if err != nil {
-		panic(err)
+		d.log.Fatal(err)
 	}
 
 	for rows.Next() {
@@ -43,7 +43,7 @@ func (d *myDB) searchTags(query string) []Entry {
 		var tmpTags string
 		err := rows.Scan(&r.id, &r.link, &tmpTags)
 		if err != nil {
-			panic(err)
+			d.log.Fatal(err)
 		}
 
 		r.tags = strings.Fields(tmpTags)
@@ -63,7 +63,7 @@ func (d *myDB) add(link, tags string) []Entry {
 	d.log.Printf("Insert: %+v", q)
 	rows, err := d.db.Query(q)
 	if err != nil {
-		panic(err)
+		d.log.Fatal(err)
 	}
 
 	for rows.Next() {
@@ -71,7 +71,7 @@ func (d *myDB) add(link, tags string) []Entry {
 		var tmpTags string
 		err := rows.Scan(&r.id, &r.link, &tmpTags)
 		if err != nil {
-			panic(err)
+			d.log.Fatal(err)
 		}
 
 		r.tags = strings.Fields(tmpTags)
@@ -89,7 +89,7 @@ func (d *myDB) all() []Entry {
 	allRows := []row{}
 	rows, err := d.db.Query("SELECT * FROM tags")
 	if err != nil {
-		panic(err)
+		d.log.Fatal(err)
 	}
 
 	for rows.Next() {
@@ -97,7 +97,7 @@ func (d *myDB) all() []Entry {
 		var tmpTags string
 		err := rows.Scan(&r.id, &r.link, &tmpTags)
 		if err != nil {
-			panic(err)
+			d.log.Fatal(err)
 		}
 
 		r.tags = strings.Fields(tmpTags)
@@ -155,15 +155,20 @@ func (app *App) handler(w http.ResponseWriter, req *http.Request) {
 
 	tmpl, err := template.ParseFiles("./layout.tmpl")
 	if err != nil {
-		panic(err)
+		app.log.Fatal(err)
 	}
 	tmpl.Execute(w, pageData)
 }
 
 func main() {
+
+	host := "0.0.0.0"
+	port := "9191"
+	url := fmt.Sprintf("%s:%s", host, port)
+
 	db, err := sql.Open("sqlite3", "./test.db")
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 
 	logger := log.New(os.Stdout, "", log.Ltime)
@@ -176,6 +181,7 @@ func main() {
 	http.HandleFunc("/", app.handler)
 	http.HandleFunc("/add", app.handler)
 	http.HandleFunc("/search", app.handler)
-	fmt.Println("Listening on 0.0.0.0:9191")
-	http.ListenAndServe("0.0.0.0:9191", nil)
+
+	fmt.Println("Listening on ", url)
+	log.Fatal(http.ListenAndServe(url, nil))
 }

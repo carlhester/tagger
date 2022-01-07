@@ -44,7 +44,7 @@
                         <td><a href="http://{{ .Link }}">{{ .Link }} </a>
                         </td>
                         <td>{{ range .Tags }}
-                            <a href="http://localhost:9191/search?tag={{.}}">{{ . }}</a><br>{{ end }}
+                            <a href="/search?tag={{.}}">{{ . }}</a><br>{{ end }}
                         </td>
                     </tr>
                     {{ end }}
