@@ -68,6 +68,8 @@ func (d *myDB) add(link, tags string) []Entry {
 		if err != nil {
 			d.log.Fatal(err)
 		}
+	} else { 
+		return d.all() 
 	}
 
 	for rows.Next() {
