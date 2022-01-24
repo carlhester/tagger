@@ -2,6 +2,7 @@ package main
 
 import (
 	"database/sql"
+	"encoding/json"
 	"fmt"
 	"html/template"
 	"log"
@@ -59,7 +60,7 @@ func (d *myDB) searchTags(query string) []Entry {
 
 func (d *myDB) add(link, tags string) []Entry {
 	allRows := []row{}
-	rows := &sql.Rows{}
+	var rows = &sql.Rows{}
 	if link != "" && tags != "" {
 		q := fmt.Sprintf("insert into tags (link, tags) values ('%s', '%s')", link, tags)
 		d.log.Printf("Insert: %+v", q)
@@ -68,8 +69,8 @@ func (d *myDB) add(link, tags string) []Entry {
 		if err != nil {
 			d.log.Fatal(err)
 		}
-	} else { 
-		return d.all() 
+	} else {
+		return d.all()
 	}
 
 	for rows.Next() {
@@ -129,6 +130,18 @@ type PageData struct {
 }
 
 func (app *App) handler(w http.ResponseWriter, req *http.Request) {
+	if req.URL.Path == "/data" {
+		e := Entry{
+			Link: "TestLink",
+			Tags: []string{"test1", "test2"},
+		}
+		b, err := json.Marshal(e)
+		if err != nil {
+			panic(err)
+		}
+		fmt.Fprint(w, string(b))
+		return
+	}
 
 	entries := func(req *http.Request) []Entry {
 		switch req.URL.Path {
@@ -183,9 +196,11 @@ func main() {
 		db:  &myDB{db: db, log: logger},
 		log: logger,
 	}
-
+	fs := http.FileServer(http.Dir("./static"))
+	http.Handle("/static/", http.StripPrefix("/static/", fs))
 	http.HandleFunc("/", app.handler)
 	http.HandleFunc("/add", app.handler)
+	http.HandleFunc("/data", app.handler)
 	http.HandleFunc("/search", app.handler)
 
 	fmt.Println("Listening on ", url)
