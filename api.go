@@ -9,6 +9,7 @@ import (
 
 type api struct {
 	log *log.Logger
+	db  *myDB
 }
 
 func (a *api) handler(w http.ResponseWriter, req *http.Request) {
@@ -24,10 +25,11 @@ func (a *api) handler(w http.ResponseWriter, req *http.Request) {
 
 func (a *api) handleData(w http.ResponseWriter, req *http.Request) {
 	a.log.Println("handleData entered")
-	e := Entry{
-		Link: "TestLink",
-		Tags: []string{"test1", "test2"},
-	}
+	// e := Entry{
+	// 	Link: "TestLink",
+	// 	Tags: []string{"test1", "test2"},
+	// }
+	e := a.db.all()
 	b, err := json.Marshal(e)
 	if err != nil {
 		panic(err)

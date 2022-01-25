@@ -11,9 +11,7 @@
 </head>
 
 <body>
-    <div>
-        <button id="ajaxButton" type="button">Make a request</button>
-    </div>
+
     <div class="container">
         <h1>{{.PageTitle}}</h1>
         <p>tag things</p>
@@ -40,41 +38,45 @@
                 </tr>
                 </tr>
             </tbody>
-            <div class="container">
-                <br>
-                <table class="table table-bordered table-sm border-primary table-striped table-hover " id="queries">
-                    <thead>
-                        <tr>
-                            <th>Link</th>
-                            <th>Tags</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {{ range .Entries }}
-                        <tr>
-                            <td><a href=" http://{{.Link}} ">{{.Link}} </a>
-                            </td>
-                            <td>{{ range .Tags }}
-                                <a class=" btn btn-primary btn-sm " href=" /search?tag={{.}} ">{{.}}</a>{{ end }}
-                            </td>
-                        </tr>
-                        {{ end }}
-                    </tbody>
-                </table>
-            </div>
-            <script src="/static/data.js"></script>
-            <script src="/static/input.js"></script>
-            <script src=" https://code.jquery.com/jquery-3.5.1.js "></script>
-            <script src=" https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js "></script>
-            <script src=" https://cdn.datatables.net/1.11.3/js/dataTables.bootstrap5.min.js "></script>
-            <script src=" https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js "
-                integrity=" sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p "
-                crossorigin=" anonymous "></script>
-            <script>
-                $(document).ready(function () {
-                    $('#queries').DataTable();
-                });
-            </script>
+        </table>
+        <div>
+            <button class="btn btn-primary" id="ajaxButton" type="button">Fetch All</button>
+        </div>
+        <div class="container">
+            <br>
+            <table class="table table-bordered table-sm border-primary table-striped table-hover " id="queries">
+                <thead>
+                    <tr>
+                        <th>Link</th>
+                        <th>Tags</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{ range .Entries }}
+                    <tr>
+                        <td><a href=" http://{{.Link}} ">{{.Link}} </a>
+                        </td>
+                        <td>{{ range .Tags }}
+                            <a class=" btn btn-primary btn-sm " href=" /search?tag={{.}} ">{{.}}</a>{{ end }}
+                        </td>
+                    </tr>
+                    {{ end }}
+                </tbody>
+            </table>
+        </div>
+        <script src="/static/data.js"></script>
+        <script src="/static/input.js"></script>
+        <script src=" https://code.jquery.com/jquery-3.5.1.js "></script>
+        <script src=" https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js "></script>
+        <script src=" https://cdn.datatables.net/1.11.3/js/dataTables.bootstrap5.min.js "></script>
+        <script src=" https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js "
+            integrity=" sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p "
+            crossorigin=" anonymous "></script>
+        <script>
+            $(document).ready(function () {
+                $('#queries').DataTable();
+            });
+        </script>
 
 
 

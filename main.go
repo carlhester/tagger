@@ -39,15 +39,20 @@ func main() {
 
 	logger := log.New(os.Stdout, "", log.Ltime)
 
-	app := &App{
+	stor := &myDB{
+		db:  db,
 		log: logger,
-		db: &myDB{
-			db:  db,
-			log: logger,
-		},
 	}
 
-	api := api{log: logger}
+	app := &App{
+		log: logger,
+		db:  stor,
+	}
+
+	api := api{
+		log: logger,
+		db:  stor,
+	}
 
 	fs := http.FileServer(http.Dir("./static"))
 	http.Handle("/static/", http.StripPrefix("/static/", fs))

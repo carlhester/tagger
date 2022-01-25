@@ -2,6 +2,7 @@ package main
 
 import (
 	"database/sql"
+	"fmt"
 	"log"
 	"strings"
 )
@@ -74,6 +75,7 @@ type myDB struct {
 // }
 
 func (d *myDB) all() []Entry {
+	fmt.Println("all")
 	allRows := []row{}
 	rows, err := d.db.Query("SELECT * FROM tags")
 	if err != nil {
@@ -97,5 +99,6 @@ func (d *myDB) all() []Entry {
 	for _, d := range allRows {
 		entries = append(entries, Entry{Link: d.link, Tags: d.tags})
 	}
+	fmt.Println(len(entries))
 	return entries
 }

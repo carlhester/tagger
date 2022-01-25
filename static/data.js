@@ -24,15 +24,15 @@ const callDataAPI = function () {
             if (httpRequest.status === 200) {
                 respData = JSON.parse(httpRequest.responseText);
                 console.log(respData);
-                var row = queryTable.insertRow(1);
-                var c1 = row.insertCell(0);
-                var c2 = row.insertCell(1);
-
-                c1.innerHTML = respData["Link"];
-                c2.innerHTML = `
-                                <a class="btn btn-primary btn-sm">${respData["Tags"][0]}</a>
-                                <a class="btn btn-primary btn-sm">${respData["Tags"][1]}</a>
-                                `
+                for (var i = 0; i < respData.length; i++) {
+                    var row = queryTable.insertRow(1);
+                    var c1 = row.insertCell(0);
+                    var c2 = row.insertCell(1);
+                    c1.innerHTML = respData[i]['Link'];
+                    for (var t = 0; t < respData[i]["Tags"].length; t++) {
+                        c2.innerHTML += `<a class="btn btn-primary btn-sm">${respData[i]["Tags"][t]}</a> `
+                    }
+                }
             }
         }
     }
