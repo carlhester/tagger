@@ -1,7 +1,9 @@
-const t = function () {
-    console.log("t called")
-}
+const linkInput = document.querySelector('.link-container input');
+const tagInput = document.querySelector('.tag-container');
 
+const t = function () {
+    console.log("t called");
+};
 
 const callDataAPI = function () {
     var httpRequest;
@@ -11,7 +13,7 @@ const callDataAPI = function () {
         httpRequest.onreadystatechange = getContents;
         httpRequest.open("GET", "/data");
         httpRequest.send();
-    };
+    }
 
     makeRequest();
 
@@ -20,7 +22,7 @@ const callDataAPI = function () {
         var respData = "";
 
         if (httpRequest.readyState === XMLHttpRequest.DONE) {
-            console.log("READY!")
+            console.log("READY!");
             if (httpRequest.status === 200) {
                 respData = JSON.parse(httpRequest.responseText);
                 console.log(respData);
@@ -28,25 +30,36 @@ const callDataAPI = function () {
                     var row = queryTable.insertRow(1);
                     var c1 = row.insertCell(0);
                     var c2 = row.insertCell(1);
-                    c1.innerHTML = respData[i]['Link'];
+                    c1.innerHTML = respData[i]["Link"];
                     for (var t = 0; t < respData[i]["Tags"].length; t++) {
-                        c2.innerHTML += `<a class="btn btn-primary btn-sm">${respData[i]["Tags"][t]}</a> `
+                        c2.innerHTML += `<a class="btn btn-primary btn-sm">${respData[i]["Tags"][t]}</a> `;
                     }
                 }
             }
         }
     }
-}
+};
 
 const callAddAPI = function () {
-    console.log("add called")
+    console.log("add called");
     var httpRequest;
+
+    const tagItems = tagInput.querySelectorAll('div.tag')
+    console.log('tags:', tagItems);
+
+    const tags = []
+    tagItems.forEach(function (n) {
+        tags.push(n.textContent)
+    })
+
+    data = JSON.stringify({ Link: linkInput.value, Tags: tags });
+    console.log(data);
 
     (function () {
         httpRequest = new XMLHttpRequest();
         httpRequest.onreadystatechange = getContents();
         httpRequest.open("POST", "/add");
-        httpRequest.send();
+        httpRequest.send(data);
     })();
 
     function getContents() {
@@ -59,8 +72,7 @@ const callAddAPI = function () {
             }
         }
     }
-}
-
+};
 
 document.getElementById("ajaxButton").addEventListener("click", callDataAPI);
 document.getElementById("btnSubmitNew").addEventListener("click", callAddAPI);

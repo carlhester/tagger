@@ -38,5 +38,17 @@ func (a *api) handleData(w http.ResponseWriter, req *http.Request) {
 }
 
 func (a *api) handleAdd(w http.ResponseWriter, req *http.Request) {
+	var e entry
+	err := json.NewDecoder(req.Body).Decode(&e)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
 
+	fmt.Printf("%+v\n", e)
+}
+
+type entry struct {
+	Link string
+	Tags []string
 }
